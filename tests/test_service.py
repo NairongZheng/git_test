@@ -90,6 +90,16 @@ class TaskServiceTest(unittest.TestCase):
             self.assertEqual(result, deleted_task)
             self.assertEqual(repository.load(), [first_task])
 
+    def test_delete_task_returns_none_for_missing_task(self) -> None:
+        """删除不存在的任务时不应抛出异常。"""
+
+        with tempfile.TemporaryDirectory() as directory:
+            repository = JsonTaskRepository(Path(directory) / "tasks.json")
+            service = TaskService(repository)
+
+            self.assertIsNone(service.delete_task(99))
+            self.assertEqual(repository.load(), [])
+
 
 if __name__ == "__main__":
     unittest.main()
