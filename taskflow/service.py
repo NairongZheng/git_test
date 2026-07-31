@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 from taskflow.models import Task
 from taskflow.repository import JsonTaskRepository
 
@@ -23,3 +25,18 @@ class TaskService:
         """按任务编号返回全部任务。"""
 
         return sorted(self._repository.load(), key=lambda task: task.task_id)
+
+    def complete_task(self, task_id: int) -> Task | None:
+        """将指定任务标记为完成；任务不存在时返回空值。"""
+
+        tasks = self._repository.load()
+        for index, task in enumerate(tasks):
+            if task.task_id != task_id:
+                continue
+
+            completed_task = replace(task, completed=True)
+            tasks[index] = completed_task
+            self._repository.save(tasks)
+            return completed_task
+
+        return None
