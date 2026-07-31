@@ -40,3 +40,12 @@ class TaskService:
             return completed_task
 
         return None
+
+    def delete_task(self, task_id: int) -> Task:
+        """删除并返回指定任务。"""
+
+        tasks = self._repository.load()
+        deleted_task = next(task for task in tasks if task.task_id == task_id)
+        remaining_tasks = [task for task in tasks if task.task_id != task_id]
+        self._repository.save(remaining_tasks)
+        return deleted_task

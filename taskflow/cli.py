@@ -26,6 +26,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("list", help="查看任务")
     complete_parser = subparsers.add_parser("complete", help="完成任务")
     complete_parser.add_argument("task_id", type=int, help="任务编号")
+    delete_parser = subparsers.add_parser("delete", help="删除任务")
+    delete_parser.add_argument("task_id", type=int, help="任务编号")
     return parser
 
 
@@ -54,5 +56,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"未找到任务 #{arguments.task_id}")
             return 1
         print(f"已完成任务 #{task.task_id}: {task.title}")
+    elif arguments.command == "delete":
+        task = service.delete_task(arguments.task_id)
+        print(f"已删除任务 #{task.task_id}: {task.title}")
 
     return 0

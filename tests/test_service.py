@@ -64,6 +64,20 @@ class TaskServiceTest(unittest.TestCase):
             self.assertIsNone(service.complete_task(99))
             self.assertEqual(repository.load(), [])
 
+    def test_delete_task_removes_existing_task(self) -> None:
+        """删除任务后数据中不应再包含该任务。"""
+
+        with tempfile.TemporaryDirectory() as directory:
+            repository = JsonTaskRepository(Path(directory) / "tasks.json")
+            service = TaskService(repository)
+            first_task = service.add_task("保留任务")
+            deleted_task = service.add_task("删除任务")
+
+            result = service.delete_task(deleted_task.task_id)
+
+            self.assertEqual(result, deleted_task)
+            self.assertEqual(repository.load(), [first_task])
+
 
 if __name__ == "__main__":
     unittest.main()
