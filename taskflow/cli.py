@@ -23,6 +23,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     add_parser = subparsers.add_parser("add", help="新增任务")
     add_parser.add_argument("title", help="任务标题")
+    subparsers.add_parser("list", help="查看任务")
     return parser
 
 
@@ -36,5 +37,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     if arguments.command == "add":
         task = service.add_task(arguments.title)
         print(f"已新增任务 #{task.task_id}: {task.title}")
+    elif arguments.command == "list":
+        tasks = service.list_tasks()
+        if not tasks:
+            print("暂无任务")
+            return 0
+
+        for task in tasks:
+            status = "x" if task.completed else " "
+            print(f"[{status}] #{task.task_id} {task.title}")
 
     return 0

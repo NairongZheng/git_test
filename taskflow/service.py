@@ -1,5 +1,5 @@
-from taskflow.repository import JsonTaskRepository
 from taskflow.models import Task
+from taskflow.repository import JsonTaskRepository
 
 
 class TaskService:
@@ -18,3 +18,8 @@ class TaskService:
         task = Task(task_id=next_id, title=title)
         self._repository.save([*tasks, task])
         return task
+
+    def list_tasks(self) -> list[Task]:
+        """按任务编号返回全部任务。"""
+
+        return sorted(self._repository.load(), key=lambda task: task.task_id)
