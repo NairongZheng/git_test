@@ -24,6 +24,18 @@ class TaskServiceTest(unittest.TestCase):
             self.assertEqual(second_task.task_id, 2)
             self.assertEqual(repository.load(), [first_task, second_task])
 
+    def test_add_task_rejects_blank_title(self) -> None:
+        """空白标题不应创建任务。"""
+
+        with tempfile.TemporaryDirectory() as directory:
+            repository = JsonTaskRepository(Path(directory) / "tasks.json")
+            service = TaskService(repository)
+
+            with self.assertRaisesRegex(ValueError, "任务标题不能为空"):
+                service.add_task("   ")
+
+            self.assertEqual(repository.load(), [])
+
     def test_list_tasks_orders_tasks_by_id(self) -> None:
         """任务列表应按编号升序排列。"""
 

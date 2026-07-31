@@ -15,9 +15,13 @@ class TaskService:
     def add_task(self, title: str) -> Task:
         """创建任务并返回保存后的记录。"""
 
+        normalized_title = title.strip()
+        if not normalized_title:
+            raise ValueError("任务标题不能为空")
+
         tasks = self._repository.load()
         next_id = max((task.task_id for task in tasks), default=0) + 1
-        task = Task(task_id=next_id, title=title)
+        task = Task(task_id=next_id, title=normalized_title)
         self._repository.save([*tasks, task])
         return task
 

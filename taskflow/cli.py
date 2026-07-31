@@ -39,7 +39,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     service = TaskService(JsonTaskRepository(arguments.data_file))
 
     if arguments.command == "add":
-        task = service.add_task(arguments.title)
+        try:
+            task = service.add_task(arguments.title)
+        except ValueError as error:
+            print(error)
+            return 1
         print(f"已新增任务 #{task.task_id}: {task.title}")
     elif arguments.command == "list":
         tasks = service.list_tasks()
