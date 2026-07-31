@@ -62,6 +62,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"已完成任务 #{task.task_id}: {task.title}")
     elif arguments.command == "delete":
         task = service.delete_task(arguments.task_id)
+        if task is None:
+            print(f"未找到任务 #{arguments.task_id}")
+            return 1
         print(f"已删除任务 #{task.task_id}: {task.title}")
 
     return 0
