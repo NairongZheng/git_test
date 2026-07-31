@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "taskflow-git-demo"
-version = "1.0.0"
+version = "1.0.1"
 description = "A Git workflow learning project"
 requires-python = ">=3.10"
 
